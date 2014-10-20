@@ -37,7 +37,7 @@ fn compute_centroids(data: &Vec<Point>, clusters: &Vec<Cluster>) -> Vec<Point> {
 	clusters.iter().map(|c| range(0, data[0].len()).map(|n| c.iter().map(|&i| data[i][n]).sum() / c.len() as f32).collect()).collect()
 }
 
-fn kmeans(k: uint, data: &Vec<Point>) -> Vec<Cluster> {
+fn kmeans(k: uint, data: &Vec<Point>) -> (Vec<Cluster>, Vec<Point>) {
 	let mut centroids = initialize(k, data);
 
 	loop {
@@ -45,7 +45,7 @@ fn kmeans(k: uint, data: &Vec<Point>) -> Vec<Cluster> {
 		let new_centroids = compute_centroids(data, &clusters);
 
 		if centroids == new_centroids {
-			return clusters;
+			return (clusters, centroids);
 		}
 		centroids = new_centroids;
 	}
@@ -61,5 +61,16 @@ fn load_data(filename: String) -> (Vec<Point>, Vec<f32>) {
 
 fn main() {
 	let (data, _) = load_data(String::from_str("./iris.data"));
-	println!("{}", kmeans(3, &data));
+	let (cluster, centroids) = kmeans(3, &data);
+
+    // save plot data for gnuplot
+    let mut file = File::create(&Path::new("output.data"));
+    for (i,c) in cluster.iter().enumerate() {
+        for n in c.iter() {
+            file.write_line(format!("{} {} {} {}", data[*n][0], data[*n][1], data[*n][2], i+1).as_slice());
+        }
+    }
+    for c in centroids.iter() {
+        file.write_line(format!("{} {} {} 4", c[0], c[1], c[2]).as_slice()); 
+    }
 }
