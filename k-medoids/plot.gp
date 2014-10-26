@@ -1,7 +1,9 @@
-set term svg enhanced size 800,600
+set term svg size 800,600
 set title "k-medoids - iris data set" font ",20"
+set view ,110,
 set style line 1 lc rgb "red"
 set style line 2 lc rgb "blue"
 set style line 3 lc rgb "green"
-set style line 4 lc rgb "yellow" pt 7 
-splot 'output.data' u 1:2:3:4 lc variable
+
+splot 'output.data' i 0 u 1:2:3:4 w points lc var pt 2,\
+      'output.data' i 1 u 1:2:3:4 w points lc var ps 2 pt 6

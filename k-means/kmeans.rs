@@ -60,17 +60,17 @@ fn load_data(filename: String) -> (Vec<Point>, Vec<f32>) {
 }
 
 fn main() {
-	let (data, _) = load_data(String::from_str("./iris.data"));
+	let (data, _) = load_data(String::from_str("../data/iris.data"));
 	let (cluster, centroids) = kmeans(3, &data);
 
-    // save plot data for gnuplot
-    let mut file = File::create(&Path::new("output.data"));
-    for (i,c) in cluster.iter().enumerate() {
-        for n in c.iter() {
-            file.write_line(format!("{} {} {} {}", data[*n][0], data[*n][1], data[*n][2], i+1).as_slice());
-        }
-    }
-    for c in centroids.iter() {
-        file.write_line(format!("{} {} {} 4", c[0], c[1], c[2]).as_slice()); 
-    }
+	// save plot data for gnuplot
+	let mut file = File::create(&Path::new("output.data"));
+	for (i,c) in cluster.iter().enumerate() {
+		for n in c.iter() {
+			file.write_line(format!("{} {} {} {}", data[*n][0], data[*n][1], data[*n][2], i+1).as_slice());
+		}
+	}
+	for c in centroids.iter() {
+		file.write_line(format!("{} {} {} 4", c[0], c[1], c[2]).as_slice()); 
+	}
 }
